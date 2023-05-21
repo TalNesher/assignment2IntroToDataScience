@@ -177,17 +177,9 @@ centers_to_labels = give_centers_lebles(assigned_centers_to_train_images, labels
 m_test = images_train.shape[0]
 X_test = (images_test.reshape(images_test.shape[0], -1)).T
 
-# Compute the covariance matrix
-cov_matrix_test = np.dot(X_test, X_test.T) / m_test
 
-# Compute the eigendecomposition of the covariance matrix
-U_test, S_test, Ut_test = np.linalg.svd(cov_matrix_test)
-
-# Select the first p columns of U as Up
-p = 40
-Up_test = U_test[:, :p]
 # Compute the reduced-sized vectors for each image. now each coulm in reduced_images_test represent a picture with 40 elements instead of 784
-reduced_images_test = np.dot(Up_test.T, X_test)
+reduced_images_test = np.dot(Up.T, X_test)
 reduced_images_test = reduced_images_test.T
 
 assigned_centers_test = assign_to_closest_center(reduced_images_test, centers_after_kmeans)
