@@ -79,11 +79,11 @@ U, S, Ut = np.linalg.svd(cov_matrix)
 S_squared = np.sqrt(S)
 
 # Plot the singular values, can be commented-out if not needed
-# plt.plot(S_squared)
-# plt.title('Square root of singular values')
-# plt.xlabel('Index')
-# plt.ylabel('Singular value')
-# plt.show()
+plt.plot(S_squared)
+plt.title('Square root of singular values')
+plt.xlabel('Index')
+plt.ylabel('Singular value')
+plt.show()
 
 # Select the first p columns of U as Up
 p = 40
@@ -100,14 +100,14 @@ image_reconstructed = np.dot(Up, reduced_images_train[:, i])
 image_reconstructed = image_reconstructed.reshape(28, 28)
 
 # Plot the original and reconstructed images, can be commented-out if not needed
-# plt.subplot(1, 2, 1)
-# plt.imshow(images_train[i], cmap="gray")
-# plt.title("Original image")
-# plt.subplot(1, 2, 2)
-# plt.imshow(image_reconstructed, cmap="gray")
-# plt.title("Reconstructed image")
-# plt.suptitle("Comparison of Original and Reconstructed Images", fontsize=16)
-# plt.show()
+plt.subplot(1, 2, 1)
+plt.imshow(images_train[i], cmap="gray")
+plt.title("Original image")
+plt.subplot(1, 2, 2)
+plt.imshow(image_reconstructed, cmap="gray")
+plt.title("Reconstructed image")
+plt.suptitle("Comparison of Original and Reconstructed Images", fontsize=16)
+plt.show()
 
 
 def kmeans(images_matrix, num_of_clusters, centers_kmeans ,max_iter=10):
@@ -117,13 +117,13 @@ def kmeans(images_matrix, num_of_clusters, centers_kmeans ,max_iter=10):
         centers_kmeans = recompute_centers(images_matrix, assigned_centers, num_of_clusters)
     
     # Plot the images (as points) and centers (as 'x'), each cluster's points in different color
-    # fig = plt.figure(figsize=(10, 8))
-    # plt.scatter(images_matrix[:, 0], images_matrix[:, 1], s=5, c = assigned_centers, cmap = "viridis")
-    # plt.scatter(centers_kmeans[:, 0], centers_kmeans[:, 1], c = "red", marker = "x")
-    # plt.xlabel("First Dimension")
-    # plt.ylabel("Second Dimension")
-    # plt.title("K-Means Clustering")
-    # plt.show()
+    fig = plt.figure(figsize=(10, 8))
+    plt.scatter(images_matrix[:, 0], images_matrix[:, 1], s=5, c = assigned_centers, cmap = "viridis")
+    plt.scatter(centers_kmeans[:, 0], centers_kmeans[:, 1], c = "red", marker = "x")
+    plt.xlabel("First Dimension")
+    plt.ylabel("Second Dimension")
+    plt.title("K-Means Clustering")
+    plt.show()
 
     centers_after_kmeans = centers_kmeans
     return assigned_centers, centers_after_kmeans
@@ -177,17 +177,8 @@ centers_to_labels = give_centers_lebles(assigned_centers_to_train_images, labels
 m_test = images_train.shape[0]
 X_test = (images_test.reshape(images_test.shape[0], -1)).T
 
-# Compute the covariance matrix
-cov_matrix_test = np.dot(X_test, X_test.T) / m_test
-
-# Compute the eigendecomposition of the covariance matrix
-U_test, S_test, Ut_test = np.linalg.svd(cov_matrix_test)
-
-# Select the first p columns of U as Up
-p = 40
-Up_test = U_test[:, :p]
 # Compute the reduced-sized vectors for each image. now each coulm in reduced_images_test represent a picture with 40 elements instead of 784
-reduced_images_test = np.dot(Up_test.T, X_test)
+reduced_images_test = np.dot(Up.T, X_test)
 reduced_images_test = reduced_images_test.T
 
 assigned_centers_test = assign_to_closest_center(reduced_images_test, centers_after_kmeans)
