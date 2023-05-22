@@ -23,10 +23,12 @@ The program is written in Python.
 
 Installation:
 
-Download the program files from the repository; a zip file of the datasets is also included.
+Download the program files from the repository; a folder with the datasets is also included.
 
 Install Python 3.6 or higher.
 
 Install the required Python libraries: numpy and matplotlib.
 
 Command: pip install numpy matplotlib.
+
+Make sure the root to the files is maching thire location on your machine.
