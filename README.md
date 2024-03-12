@@ -1,7 +1,7 @@
 # Classifying images of handwritten numbers
 
 
-This program was created as part of the "Introduction to Data Science" course I took. All images are taken from the MNIST database and constructed from 28x28 grayscale pixels.
+This program was created on the base of a project i did as part of the "Introduction to Data Science" course I took. All images are taken from the MNIST database and constructed from 28x28 grayscale pixels.
 
 It uses the K-means algorithm, which is an iterative, unsupervised clustering algorithm used to group data points into K clusters, with the objective of minimizing the sum of squared distances between data points and their assigned cluster center. It involves the following steps:
 
