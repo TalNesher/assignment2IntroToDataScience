@@ -52,10 +52,11 @@ class MnistDataloader(object):
 
 # Set file paths based on added MNIST Datasets
 MNIST_data_dir = "MNIST data"
-training_images_filepath = os.path.join(os.getcwd(), MNIST_data_dir, "train-images.idx3-ubyte")
-training_labels_filepath = os.path.join(os.getcwd(), MNIST_data_dir, "train-labels.idx1-ubyte")
-test_images_filepath = os.path.join(os.getcwd(), MNIST_data_dir, "t10k-images.idx3-ubyte")
-test_labels_filepath = os.path.join(os.getcwd(), MNIST_data_dir, "t10k-labels.idx1-ubyte")
+cwd = os.getcwd()
+training_images_filepath = os.path.join(cwd, MNIST_data_dir, "train-images.idx3-ubyte")
+training_labels_filepath = os.path.join(cwd, MNIST_data_dir, "train-labels.idx1-ubyte")
+test_images_filepath = os.path.join(cwd, MNIST_data_dir, "t10k-images.idx3-ubyte")
+test_labels_filepath = os.path.join(cwd, MNIST_data_dir, "t10k-labels.idx1-ubyte")
 
 
 # Load MINST dataset
