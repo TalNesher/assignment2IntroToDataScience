@@ -1,0 +1,242 @@
+
+על עצמי לימודים ופרוייקטים:
+טל נשר בן 25 במקור מכפר סבא (עובר ליד המשרדים שלכם לא מעט) היום אני גר בבאר שבע עם ארוסתי
+ אני סטודנט שנה שלישית למדעי המחשב עם התמחות במדעי הנתונים, אוהב את הלימודים והתחום,
+  זה פשוט פלא בעיני איך הטכנולוגיות האלה עובדות וזה כיף ללמוד ולהבין את זה
+  אני מתכנן לסיים את התואר עוד שנה 
+  אבל נשארו לי יחסית מעט נקז ככה שאני מאוד גמיש ויכול לשחק עם זה לכאן או לכאן לפי העבודה שאני אמצא
+   פרוייקט שמסווג ספרות כתובות בכתב יד מתוך מאגר אמניסט על ידי אלגוריתם למידת מכונה קיי מינס, 
+   היה מאוד מעניין לעשות אותו כי בהתחלה זה נשמע משימה מאתגרת אבל היה יפה לראות איך זה קורה בעזרת כל מני שיטות מתמטיות
+
+
+
+
+************ Interface vs Abstract Class *****************
+
+
+Interfaces and abstract classes are both mechanisms in Java for abstraction and defining contracts for classes.
+While they share some similarities, they serve different purposes and have distinct characteristics:
+
+------------- Interface: -------------
+
+Purpose:
+An interface defines a contract that classes can choose to implement.
+
+It specifies a set of methods that a class must implement, without providing any method implementations.
+
+Multiple Inheritance:
+Java allows interfaces to support multiple inheritance, meaning a class can implement multiple interfaces.
+This is useful when a class needs to exhibit behavior from multiple sources.
+Method Implementation:
+In interfaces, all methods are implicitly public and abstract.
+Prior to Java 8, interfaces could not contain method implementations. However, since Java 8, default and static methods can be provided in interfaces.
+!
+Use Cases:
+Interfaces are often used to define APIs and contracts that classes must adhere to.
+They are commonly used for defining callback mechanisms, defining specifications for various services, and implementing polymorphism.
+
+
+
+------------ Abstract Class: -------------
+
+Purpose:
+An abstract class serves as a partially implemented class, providing a template for its subclasses.
+
+It can contain both abstract methods (methods without implementations) and concrete methods (methods with implementations).
+Single Inheritance:
+Java supports single inheritance for abstract classes, meaning a class can extend only one abstract class.
+This makes abstract classes useful for defining base classes or providing common functionality to subclasses.
+Method Implementation:
+Abstract classes can have abstract methods, which must be implemented by concrete subclasses.
+They can also have concrete methods, which are inherited by subclasses as-is.
+!
+Use Cases:
+Abstract classes are useful when you want to define a common base class that captures the essence of a group of related classes.
+They are often used for providing common functionality, defining instance variables, and enforcing certain behaviors across subclasses.
+
+
+
+
+*************** Static ****************
+
+In Java, the keyword static is used to declare members (variables and methods)
+that belong to the class itself, rather than to instances (objects) of the class.
+
+Static Variables (Class Variables):
+A static variable is shared among all instances of a class.
+It belongs to the class, not to any specific instance of the class.
+There's only one copy of a static variable that is shared across all instances of the class.
+Static variables are initialized only once, at the start of the program execution.
+They are accessed using the class name, rather than through an object reference.
+
+Static Methods (Class Methods):
+A static method belongs to the class, not to any particular instance.
+It can be called without creating an instance of the class.
+Static methods cannot access instance variables directly, as they do not belong to any particular instance.
+They are commonly used for utility methods or operations that do not depend on the state of any particular instance.
+
+
+
+
+**************** Design patterns: *****************
+
+---------------- Builder: -------------------
+
+The Builder pattern is used to construct complex objects step by step. It separates the construction of a complex object from its representation, allowing the same construction process to create different representations.
+
+Structure:
+
+Builder:            Abstract interface for creating parts of a product.
+ConcreteBuilder:    Provides implementations for building parts of the product.
+Director:           Coordinates the building process by directing the ConcreteBuilder.
+Product:            The complex object being built.
+
+
+class Pizza {
+    private String dough;
+    private String sauce;
+    private String topping;
+
+    // Constructor, getters, and setters...
+}
+
+// Builder
+interface PizzaBuilder {
+    PizzaBuilder addDough(String dough);
+    PizzaBuilder addSauce(String sauce);
+    PizzaBuilder addTopping(String topping);
+    Pizza build();
+}
+
+// ConcreteBuilder
+class HawaiianPizzaBuilder implements PizzaBuilder {
+    private Pizza pizza = new Pizza();
+
+    @Override
+    public PizzaBuilder addDough(String dough) {
+        pizza.setDough(dough);
+        return this;
+    }
+
+    @Override
+    public PizzaBuilder addSauce(String sauce) {
+        pizza.setSauce(sauce);
+        return this;
+    }
+
+    @Override
+    public PizzaBuilder addTopping(String topping) {
+        pizza.setTopping(topping);
+        return this;
+    }
+
+    @Override
+    public Pizza build() {
+        return pizza;
+    }
+}
+
+// Director
+class Waiter {
+    private PizzaBuilder pizzaBuilder;
+
+    public Waiter(PizzaBuilder pizzaBuilder) {
+        this.pizzaBuilder = pizzaBuilder;
+    }
+
+    public Pizza constructPizza() {
+        return pizzaBuilder
+            .addDough("Pan")
+            .addSauce("Tomato")
+            .addTopping("Ham")
+            .build();
+    }
+}
+
+// Usage
+public class Main {
+    public static void main(String[] args) {
+        PizzaBuilder pizzaBuilder = new HawaiianPizzaBuilder();
+        Waiter waiter = new Waiter(pizzaBuilder);
+        Pizza pizza = waiter.constructPizza();
+    }
+}
+
+
+------------------ Strategy ---------------------
+
+The Strategy pattern defines a family of algorithms, encapsulates each one, and makes them interchangeable. It allows the algorithm to vary independently from clients that use it.
+
+Structure:
+
+Strategy: Interface defining the common behavior for all supported algorithms.
+ConcreteStrategy: Provides implementations of the strategy interface.
+Context: Uses the strategy interface to execute a particular algorithm.
+
+// Strategy
+interface SortingStrategy {
+    void sort(int[] array);
+}
+
+// ConcreteStrategy
+class BubbleSort implements SortingStrategy {
+    @Override
+    public void sort(int[] array) {
+        // Bubble sort implementation
+    }
+}
+
+// ConcreteStrategy
+class QuickSort implements SortingStrategy {
+    @Override
+    public void sort(int[] array) {
+        // Quick sort implementation
+    }
+}
+
+// Context
+class Sorter {
+    private SortingStrategy sortingStrategy;
+
+    public void setSortingStrategy(SortingStrategy sortingStrategy) {
+        this.sortingStrategy = sortingStrategy;
+    }
+
+    public void sort(int[] array) {
+        sortingStrategy.sort(array);
+    }
+}
+
+// Usage
+public class Main {
+    public static void main(String[] args) {
+        int[] array = {5, 2, 7, 1, 9};
+
+        Sorter sorter = new Sorter();
+        sorter.setSortingStrategy(new BubbleSort());
+        sorter.sort(array);  // Sort using BubbleSort
+
+        sorter.setSortingStrategy(new QuickSort());
+        sorter.sort(array);  // Sort using QuickSort
+    }
+}
+
+
+
+***************** Threds ******************
+
+Deadlock:  Deadlock occurs in a concurrent system when two or more threads are blocked indefinitely,
+           waiting for each other to release resources that they need.
+
+        Prevention and Resolution: Deadlock can be prevented by ensuring that resources are acquired 
+        in a consistent and predefined order, or by using timeouts and deadlock detection algorithms 
+        to identify and break deadlocks.
+
+Starvetion: Starvation occurs when a thread is unable to gain necessary resources to execute its task,
+            either indefinitely or for an extended period, due to scheduling or resource allocation policies.
+
+            Prevention and Resolution: Starvation can be mitigated by implementing fair scheduling policies,
+             and ensuring that threads have fair access to resources.
+
+
+

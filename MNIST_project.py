@@ -80,11 +80,11 @@ U, S, Ut = np.linalg.svd(cov_matrix)
 S_squared = np.sqrt(S)
 
 # Plot the singular values, can be commented-out if not needed
-plt.plot(S_squared)
-plt.title('Square root of singular values')
-plt.xlabel('Index')
-plt.ylabel('Singular value')
-plt.show()
+# plt.plot(S_squared)
+# plt.title('Square root of singular values')
+# plt.xlabel('Index')
+# plt.ylabel('Singular value')
+# plt.show()
 
 # Select the first p columns of U as Up
 p = 40
@@ -142,7 +142,7 @@ def recompute_centers(images_matrix, assigned_centers, num_of_clusters):
     return centers_kmeans
 
 
-print("first run of kmeans:")
+print("First run of kmeans:")
 # Run kmean with p = 40 and randomize centers
 num_of_clusters = 10
 
@@ -157,7 +157,7 @@ assigned_centers_to_train_images = np.array(assigned_centers_to_train_images)
 
 
 # Assign a digit to a cluster using the most common label in that cluster
-def give_centers_lebles(assigned_centers, labels_train):
+def give_centers_labels(assigned_centers, labels_train):
     sums_of_images_per_center = np.zeros((num_of_clusters, num_of_clusters))
     centers_to_labels = np.zeros(num_of_clusters)
     for i in range (assigned_centers.shape[0]):
@@ -171,7 +171,7 @@ def give_centers_lebles(assigned_centers, labels_train):
     return centers_to_labels
 
 
-centers_to_labels = give_centers_lebles(assigned_centers_to_train_images, labels_train)
+centers_to_labels = give_centers_labels(assigned_centers_to_train_images, labels_train)
 
 
 # Now we prepare the test images to be classified
@@ -185,7 +185,7 @@ reduced_images_test = reduced_images_test.T
 assigned_centers_test = assign_to_closest_center(reduced_images_test, centers_after_kmeans)
 
 
-def caculate_succses(centers_to_labels, assigned_centers, labels, reduced_images):
+def calculate_success(centers_to_labels, assigned_centers, labels, reduced_images):
     # Calculates the success rate of the K-means clustering algorithm.
     succsus = 0
     for i in range(reduced_images.shape[0]):
@@ -195,23 +195,27 @@ def caculate_succses(centers_to_labels, assigned_centers, labels, reduced_images
     return (succsus / reduced_images.shape[0]) * 100
 
 
-succses_presents = caculate_succses(centers_to_labels, assigned_centers_test, labels_test, reduced_images_test)
-print("the succses rate is", succses_presents, "precents")
+succses_presents = calculate_success(centers_to_labels, assigned_centers_test, labels_test, reduced_images_test)
+print("The succses rate is", succses_presents, "precents")
 
 
-# Running for three iterations to check if differant sets of random centroids yiled differant succses rates
-print("when chosing random centroids:")
-for i in range(3):
-    centroids = np.random.uniform(low = -0.5, high = 0.5, size = (num_of_clusters, reduced_images_train.shape[1]))
+
+# Lists to store success rates for each iteration
+success_rates_random = []
+
+# Running for five iterations to check if different sets of random centroids yield different success rates
+print("When choosing random centroids:")
+for i in range(5):  # Adjusted to run for 5 iterations
+    centroids = np.random.uniform(low=-0.5, high=0.5, size=(num_of_clusters, reduced_images_train.shape[1]))
     assigned_centers_to_train_images, centers_after_kmeans = kmeans(reduced_images_train, num_of_clusters, centroids)
     assigned_centers_to_train_images = np.array(assigned_centers_to_train_images)
-    centers_to_labels = give_centers_lebles(assigned_centers_to_train_images, labels_train)
+    centers_to_labels = give_centers_labels(assigned_centers_to_train_images, labels_train)
     assigned_centers_to_test_images = assign_to_closest_center(reduced_images_test, centers_after_kmeans)
-    succses_presents = caculate_succses(centers_to_labels, assigned_centers_to_test_images, labels_test, reduced_images_test)
-    print("iteration", i, "has a succses rate of: ", succses_presents, "precents")
+    success_rate = calculate_success(centers_to_labels, assigned_centers_to_test_images, labels_test, reduced_images_test)
+    print("Iteration", i, "has a success rate of:", success_rate, "percent")
+    success_rates_random.append(success_rate)
 
-
-# Chosinig each starting centroid to be the mean of 10 images that are all labeld as the same number, for each number between 0 to 9
+# Chosinig each starting centroid to be the mean of 10 images that are all labeled as the same number, for each number between 0 to 9
 centroids = np.zeros((10, reduced_images_train.shape[1]))
 for i in range(10):
         counter = 0
@@ -226,7 +230,19 @@ for i in range(10):
 
 assigned_centers_to_train_images, centers_after_kmeans = kmeans(reduced_images_train, num_of_clusters, centroids)
 assigned_centers_to_train_images = np.array(assigned_centers_to_train_images)
-centers_to_labels = give_centers_lebles(assigned_centers_to_train_images, labels_train)
+centers_to_labels = give_centers_labels(assigned_centers_to_train_images, labels_train)
 assigned_centers_to_test_images = assign_to_closest_center(reduced_images_test, centers_after_kmeans)
-succses_presents = caculate_succses(centers_to_labels, assigned_centers_to_test_images, labels_test, reduced_images_test)
-print("when computing the centers we get ", succses_presents, "precent sucsses rate")
+success_rate_non_random = calculate_success(centers_to_labels, assigned_centers_to_test_images, labels_test, reduced_images_test)
+print("When computing the centers we get ", success_rate_non_random, "percent success rate")
+
+# Plotting the success rates
+plt.plot(range(1, 6), success_rates_random, marker='o', label='Random Centroids')
+plt.axhline(y=np.mean(success_rates_random), color='r', linestyle='--', label='Mean of Random Centroids')
+plt.axhline(y=success_rate_non_random, color='g', linestyle='-', label='Mean of Random Centroids')
+plt.title('Success Rates for Different Sets of Centroids')
+plt.xlabel('Iteration')
+plt.ylabel('Success Rate (%)')
+plt.xticks(list(range(1, 7)) + [6])
+plt.grid(True)
+plt.legend()
+plt.show()
